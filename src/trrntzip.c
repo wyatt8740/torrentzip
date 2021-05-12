@@ -942,6 +942,20 @@ int RecursiveMigrateTop (const char * pszRelPath, WORKSPACE * ws )
   return rc == TZ_CRITICAL ? TZ_CRITICAL : TZ_OK;
 }
 
+void
+print_usage_text (FILE *stream)
+{
+  /* stream could be stdout or stderr, for instance */
+  fprintf (stream, "Usage: trrntzip [OPTIONS] [PATH/ZIP FILE]\n\n");
+  fprintf (stream, "Options:\n\n");
+  fprintf (stream, "-h, -? : show this help\n");
+  fprintf (stream, "-d     : strip sub-directories from zips\n");
+  fprintf (stream, "-s     : prevent sub-directory recursion\n");
+  fprintf (stream, "-f     : force re-zip\n");
+  fprintf (stream, "-v     : show version\n");
+  fprintf (stream, "-g     : pause when finished\n");
+}
+
 int
 main (int argc, char **argv)
 {
@@ -962,19 +976,13 @@ main (int argc, char **argv)
 
       switch (argv[iCount][1])
       {
+      case 'h':
       case '?':
         fprintf (stdout, "\nTorrentZip v%s\n\n", TZ_VERSION);
         fprintf (stdout, "Copyright (C) 2012 TorrentZip Team :\n");
         fprintf (stdout, "StatMat, shindakun, Ultrasubmarine, r3nh03k, goosecreature, gordonj\n");
         fprintf (stdout, "Homepage : http://sourceforge.net/projects/trrntzip\n\n");
-        fprintf (stdout, "Usage: trrntzip [OPTIONS] [PATH/ZIP FILE]\n\n");
-        fprintf (stdout, "Options:\n\n");
-        fprintf (stdout, "-? : show this help\n");
-        fprintf (stdout, "-d : strip sub-directories from zips\n");
-        fprintf (stdout, "-s : prevent sub-directory recursion\n");
-        fprintf (stdout, "-f : force re-zip\n");
-        fprintf (stdout, "-v : show version\n");
-        fprintf (stdout, "-g : pause when finished\n");
+        print_usage_text(stdout);
         return TZ_OK;
 
       case 'd':
@@ -1011,7 +1019,7 @@ main (int argc, char **argv)
   if (argc < 2 || iOptionsFound == (argc - 1))
   {
     fprintf (stderr, "\ntrrntzip: missing path\n");
-    fprintf (stderr, "Usage: trrntzip [OPTIONS] [PATH/ZIP FILE]\n");
+    print_usage_text(stderr);
     return TZ_ERR;
   }
 
